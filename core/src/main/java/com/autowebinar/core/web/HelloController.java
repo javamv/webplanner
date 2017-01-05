@@ -22,7 +22,7 @@ public class HelloController{
 
     @RequestMapping(value="/login", method = RequestMethod.GET)
     public String login(ModelMap model) {
-        model.addAttribute("message", "������ ������� ����!");
+        model.addAttribute("message", "Добро Пожаловать!");
         model.addAttribute("signed", "false");
         return "login";
     }
