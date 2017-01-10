@@ -65,8 +65,8 @@ public class GotoController {
 
         CreatedWebinar createdGotoWebinar = gotoSession.createWebinar(newGotoWebinar);
 
-        webinar.setEndDate(startDate);
-        webinar.setStartDate(endDate);
+        webinar.setEndDate(endDate);
+        webinar.setStartDate(startDate);
         webinar.setGotoLink(createdGotoWebinar.getWebinarKey());
         webinar.setScheduled(true);
 

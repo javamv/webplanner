@@ -51,6 +51,10 @@
 					<input type="text" name="topic_eng" id="topic_eng" />
 				</div>
 				<div class="field">
+                    <label for="imageLink">Image Link</label>
+                    <input type="text" name="imageLink" id="imageLink" />
+                </div>
+				<div class="field">
 					<label for="description_eng">Description</label>
 					<textarea name="description_eng" id="description_eng" rows="3"></textarea>
 				</div>

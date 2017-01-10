@@ -42,9 +42,9 @@ public class SendEmailController {
     @Autowired
     MongoOperations mongoOperations;
 
+
     @Autowired
     VelocityEngine velocityEngine;
-
 
     @GetMapping("/notifyTC")
     public String notifyTC(@RequestParam(value = "id") String id, Model model) throws MessagingException {

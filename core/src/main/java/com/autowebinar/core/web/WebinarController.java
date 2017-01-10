@@ -36,8 +36,9 @@ public class WebinarController {
         String topicEng = request.getParameter("topic_eng");
         String descriptionEng = request.getParameter("description_eng");
         String userId = request.getParameter("userId");
+        String imageLink = request.getParameter("imageLink");
 
-        Webinar webinar = new Webinar(topicEng, descriptionEng, userId);
+        Webinar webinar = new Webinar(topicEng, descriptionEng, userId, imageLink);
         // save
         mongoOperations.save(webinar);
 

@@ -24,21 +24,24 @@ public class Webinar {
     private Boolean sentTCNotification =false;
     private String blogPostCode;
     private String userId;
+    private String imageLink;
 
-    public Webinar(String topicEng, String topicRus, String descriptionEng, String descriptionRus) {
-        this.topicEng = topicEng;
-        this.topicRus = topicRus;
-        this.descriptionEng = descriptionEng;
-        this.descriptionRus = descriptionRus;
-    }
-
-    public Webinar(String topicEng, String descriptionEng, String userId) {
+    public Webinar(String topicEng, String descriptionEng, String userId, String imageLink) {
         this.topicEng = topicEng;
         this.descriptionEng = descriptionEng;
         this.userId = userId;
+        this.imageLink = imageLink;
     }
 
     public Webinar() {
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public String getUserId() {
