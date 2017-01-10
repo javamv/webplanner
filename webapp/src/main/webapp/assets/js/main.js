@@ -23,10 +23,27 @@
 			$header = $('#header'),
 			$footer = $('#footer'),
 			$main = $('#main'),
-			$main_articles = $main.children('article');
+			$main_articles = $main.children('article'),
+			$update = $('#updateButton');
 
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
+
+			$update.click(function () {
+              $.getJSON('webinars', function (data) {
+                    var table = $('#webinarList');
+                    $(table).empty();
+                    $.each(data, function (index, value) {
+                        var date = new Date(value.startDate)
+                        var TableRow = "<tr>";
+                        TableRow += "<td><a href='retrieveWebinar?id="+value.id+"'>"+ value.topicEng + "</a></td>";
+                        TableRow += "<td>" + date + "</td>";
+                        TableRow += "</tr>";
+                        $(table).append(TableRow);
+                    });
+
+              });
+            });
 
 			$window.on('load', function() {
 				window.setTimeout(function() {
