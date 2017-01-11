@@ -37,7 +37,7 @@
 					<li><a href="#schedule">SCHEDULE GOTO</a></li>
 				</c:if>
 				<c:if test="${scheduled == true}">
-					<li><a href="#scheduled" target="_tab">SCHEDULED</a></li>
+					<li><a href="#scheduled">SCHEDULED</a></li>
 				</c:if>
 				<c:if test="${posted == false}">
 					<li><a href="createBlogPost?id=${id}">CREATE POST</a></li>
