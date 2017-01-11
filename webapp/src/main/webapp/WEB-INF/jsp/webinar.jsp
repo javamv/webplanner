@@ -37,16 +37,16 @@
 					<li><a href="#schedule">SCHEDULE GOTO</a></li>
 				</c:if>
 				<c:if test="${scheduled == true}">
-					<li><a href="${gotoLink}" target="_tab">SCHEDULED</a></li>
+					<li><a href="#sheduled" target="_tab">SCHEDULED</a></li>
 				</c:if>
 				<c:if test="${posted == false}">
-				    <li><a href="createBlogPost?id=${id}">CREATE POST</a></li>
+					<li><a href="createBlogPost?id=${id}">CREATE POST</a></li>
 				</c:if>
 				<c:if test="${posted == true}">
-                    <li><a href="${blogLink}" target="_tab">POSTED</a></li>
-                </c:if>
-                <li><a href="notifyLuxmarketing?id=${id}">MARKETING</a></li>
-                <li><a href="notifyTC?id=${id}">TC MAIL LIST</a></li>
+					<li><a href="#posted">POSTED</a></li>
+				</c:if>
+				<li><a href="notifyLuxmarketing?id=${id}">MARKETING</a></li>
+				<li><a href="notifyTC?id=${id}">TC MAIL LIST</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -78,12 +78,42 @@
 					<li><input type="reset" value="Reset" /></li>
 				</ul>
 			</form>
-			<!--								<ul class="icons">
-                                                <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-                                                <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-                                                <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-                                                <li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
-                                            </ul>-->
+		</article>
+
+		<!-- Scheduled -->
+		<article id="scheduled">
+			<h2 class="major">GotoWebinar Manager</h2>
+			<section>
+				<h3 class="major">GotoWebinar Links</h3>
+				<ul class="actions">
+					<li><a href="${gotoManageLink}" class="button">Manage</a></li>
+					<li><a href="${gotoLink}" class="button">Register</a></li>
+				</ul>
+			</section>
+			<section>
+				<h3 class="major">Cancel Event</h3>
+				<ul class="actions">
+					<li><a href="cancelGotoWebinar?id=${id}" class="button special">Cancel</a></li>
+				</ul>
+			</section>
+		</article>
+
+		<!-- Posted -->
+		<article id="posted">
+			<h2 class="major">Blog Manager</h2>
+			<section>
+				<h3 class="major">Blog Links</h3>
+				<ul class="actions">
+					<li><a href="${blogLink}" class="button" target="_tab">View</a></li>
+					<li><a href="${blogEditLink}" class="button" target="_tab">Edit</a></li>
+				</ul>
+			</section>
+			<section>
+				<h3 class="major">Delete Blog</h3>
+				<ul class="actions">
+					<li><a href="deleteBlogPost?id=${id}" class="button special">Delete</a></li>
+				</ul>
+			</section>
 		</article>
 
 	</div>

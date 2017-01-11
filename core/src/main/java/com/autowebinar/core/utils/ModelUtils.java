@@ -26,9 +26,12 @@ public class ModelUtils {
         model.addAttribute("posted", webinar.getPosted());
         model.addAttribute("sentForApproval", webinar.getSentForApproval());
         model.addAttribute("gotoLink", createGotoLink(webinar));
-        model.addAttribute("blogLink", createLuxtownLink(webinar));
+        model.addAttribute("gotoManageLink", createManageLink(webinar));
+        model.addAttribute("blogLink", luxtownViewLink(webinar));
+        model.addAttribute("blogEditLink", luxtownEditLink(webinar));
         model.addAttribute("userImage", user.getImage());
         model.addAttribute("userId", user.getId());
+
     }
 
     public static void userToModel(Model model, User user) {

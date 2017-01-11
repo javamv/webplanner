@@ -23,4 +23,8 @@ public class GotoSession extends WebinarsApi {
     public CreatedWebinar createWebinar(WebinarReqCreate webinar) throws ApiException {
         return webinarsApi.createWebinar(accessToken, organizerKey, webinar);
     }
+
+    public void cancelWebinar(Long webinarKey) throws ApiException {
+        webinarsApi.cancelWebinar(accessToken, organizerKey, webinarKey, false);
+    }
 }

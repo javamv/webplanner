@@ -43,6 +43,11 @@ public class ConfluenceRestSession {
         return (String)result.get("id");
     }
 
+    public void deleteBlogPost(String blogPostCode) throws IOException {
+        System.out.println(SENTINEL_REST_API_URL+blogPostCode);
+        restTemplate.delete(SENTINEL_REST_API_URL+blogPostCode);
+    }
+
 
     public static class Space
     {

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -69,6 +70,25 @@ public class GotoController {
         webinar.setStartDate(startDate);
         webinar.setGotoLink(createdGotoWebinar.getWebinarKey());
         webinar.setScheduled(true);
+
+        mongoOperations.save(webinar);
+
+        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+
+        return "webinar";
+    }
+
+    @GetMapping("/cancelGotoWebinar")
+    public String cancelGotoWebinar(@RequestParam(value = "id") String id, Model model)
+            throws com.citrix.gotowebinar.api.common.ApiException, ParseException {
+
+        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
+        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
+
+        gotoSession.cancelWebinar(new Long(webinar.getGotoLink()));
+
+        webinar.setGotoLink(null);
+        webinar.setScheduled(false);
 
         mongoOperations.save(webinar);
 

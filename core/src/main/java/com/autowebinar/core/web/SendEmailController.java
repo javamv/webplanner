@@ -23,9 +23,10 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static com.autowebinar.core.data.ConstantVariables.*;
 
@@ -59,7 +60,8 @@ public class SendEmailController {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setFrom(user.getLuxMail() != null ? user.getLuxMail() : LUXOFT_AGILE_GMAIL_COM);
+        helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
+        helper.setCc(user.getLuxMail());
         helper.setTo(VMOSKALENKO_LUXOFT_COM);
         helper.setSubject(EMAIL_SUBJECT);
 
@@ -71,16 +73,23 @@ public class SendEmailController {
         helper.setText(writer.toString(), false);
 
         /*  Attachement  */
-        String gotoUrl = createGotoLink(webinar);
+        String gotoUrl = createGotoLinkTC(webinar);
 
+        Calendar startTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+        startTime.setTime(webinar.getStartDate());
+
+        Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+        endTime.setTime(webinar.getEndDate());
 
         Template attachment = velocityEngine.getTemplate("velocity/tctemplate.mht");
         context = new VelocityContext();
         context.put("description", webinar.getDescriptionEng());
         context.put("topic", webinar.getTopicEng());
         context.put("date", String.format(Locale.ENGLISH, "%1$tB %1$te", webinar.getStartDate()));
-        context.put("time", String.format(Locale.ENGLISH, "%1$tI p.m. - %2$tI p.m. (Moscow time zone)", webinar.getStartDate(), webinar.getEndDate()));
+        context.put("time", String.format(Locale.ENGLISH, "%1$tI p.m. - %2$tI p.m. (Moscow time zone)",
+                startTime, endTime));
         context.put("link", gotoUrl);
+        context.put("instructor", user.getUsername());
         writer = new StringWriter();
         attachment.merge(context, writer);
         helper.addAttachment("webinar.mht", new ByteArrayResource(writer.toString().getBytes()));
@@ -109,12 +118,13 @@ public class SendEmailController {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
+        helper.setCc(user.getLuxMail());
         helper.setTo(VMOSKALENKO_LUXOFT_COM);
         helper.setSubject(EMAIL_SUBJECT);
 
         VelocityContext context = new VelocityContext();
         Template body = velocityEngine.getTemplate("velocity/luxtownbody.ve", "UTF-16");
-        context.put("link", String.format(BLOG_LINK, webinar.getBlogPostCode()));
+        context.put("link", String.format(BLOG_VIEW_LINK, webinar.getBlogPostCode()));
         context.put("signature", user.getSignature());
         StringWriter writer = new StringWriter();
         body.merge(context, writer);

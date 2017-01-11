@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static com.autowebinar.core.data.ConstantVariables.createGotoLinkLT;
 
@@ -44,11 +46,21 @@ public class ConfluenceController {
         Query searchUserQuery = new Query(Criteria.where("id").is(id));
         Webinar webinar = mongoOperations.findOne(searchUserQuery, Webinar.class);
 
+        Calendar startTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+        startTime.setTime(webinar.getStartDate());
+
+        Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+        endTime.setTime(webinar.getEndDate());
+
+
         VelocityContext context = new VelocityContext();
         Template body = velocityEngine.getTemplate("velocity/blogpost.vh", "UTF-16");
         context.put("description", webinar.getDescriptionEng());
         context.put("image", webinar.getImageLink());
-        context.put("time", String.format(Locale.ENGLISH, "Date: %1$tB %1$te, Time: %1$tI p.m. - %2$tI p.m. (Moscow time zone)", webinar.getStartDate(), webinar.getEndDate()));
+        context.put("time", String.format(Locale.ENGLISH,
+                "Date: %1$tB %1$te, Time: %1$tI p.m. - %2$tI p.m. (Moscow time zone)",
+                startTime,
+                endTime));
         context.put("gotoLink", createGotoLinkLT(webinar));
         StringWriter writer = new StringWriter();
         body.merge(context, writer);
@@ -64,6 +76,23 @@ public class ConfluenceController {
 
         webinar.setPosted(true);
         webinar.setBlogPostCode(blogPostCode);
+        mongoOperations.save(webinar);
+
+        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+
+        return "webinar";
+    }
+
+    @GetMapping("/deleteBlogPost")
+    public String deleteBlogPost(@RequestParam(value = "id") String id, Model model) throws IOException {
+
+        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
+        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
+
+        confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
+
+        webinar.setPosted(false);
+        webinar.setBlogPostCode(null);
         mongoOperations.save(webinar);
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
