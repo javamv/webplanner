@@ -81,7 +81,7 @@ public class SendEmailController {
         Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
         endTime.setTime(webinar.getEndDate());
 
-        Template attachment = velocityEngine.getTemplate("velocity/tctemplate.mht");
+        Template attachment = velocityEngine.getTemplate("velocity/tctemplate.mht", "UTF-8");
         context = new VelocityContext();
         context.put("description", webinar.getDescriptionEng());
         context.put("topic", webinar.getTopicEng());
