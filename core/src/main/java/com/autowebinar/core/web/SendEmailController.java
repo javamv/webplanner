@@ -81,18 +81,21 @@ public class SendEmailController {
         Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
         endTime.setTime(webinar.getEndDate());
 
-        Template attachment = velocityEngine.getTemplate("velocity/tctemplate.mht", "UTF-8");
+        Template attachment = velocityEngine.getTemplate("velocity/webinar.doc", "UTF-8");
         context = new VelocityContext();
-        context.put("description", webinar.getDescriptionEng());
         context.put("topic", webinar.getTopicEng());
         context.put("date", String.format(Locale.ENGLISH, "%1$tB %1$te", webinar.getStartDate()));
         context.put("time", String.format(Locale.ENGLISH, "%1$tI p.m. - %2$tI p.m. (Moscow time zone)",
                 startTime, endTime));
-        context.put("link", gotoUrl);
+        context.put("language", webinar.getLanguage());
+        context.put("description", webinar.getDescriptionEng());
         context.put("instructor", user.getUsername());
+        context.put("targetAudience", webinar.getTargetAudience());
+        context.put("link", gotoUrl);
+        context.put("email", user.getLuxMail());
         writer = new StringWriter();
         attachment.merge(context, writer);
-        helper.addAttachment("webinar.mht", new ByteArrayResource(writer.toString().getBytes()));
+        helper.addAttachment("webinar.doc", new ByteArrayResource(writer.toString().getBytes()));
 
         javaMailSender.send(helper.getMimeMessage());
 

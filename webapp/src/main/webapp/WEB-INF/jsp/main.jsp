@@ -54,6 +54,14 @@
                     <label for="imageLink">Image Link</label>
                     <input type="text" name="imageLink" id="imageLink" />
                 </div>
+                <div class="field">
+                    <label for="language">Language</label>
+                    <input type="text" name="language" id="language" />
+                </div>
+                <div class="field">
+                    <label for="targetAudience">Target Audience</label>
+                    <input type="text" name="targetAudience" id="targetAudience" />
+                </div>
 				<div class="field">
 					<label for="description_eng">Description</label>
 					<textarea name="description_eng" id="description_eng" rows="3"></textarea>

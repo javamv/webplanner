@@ -12,11 +12,11 @@ public class Webinar {
     private String id;
 
     private String topicEng;
-    private String topicRus;
     private String descriptionEng;
-    private String descriptionRus;
     private Date startDate;
     private Date endDate;
+    private String language;
+    private String targetAudience;
     private String gotoLink;
     private Boolean scheduled=false;
     private Boolean posted=false;
@@ -26,14 +26,32 @@ public class Webinar {
     private String userId;
     private String imageLink;
 
-    public Webinar(String topicEng, String descriptionEng, String userId, String imageLink) {
+    public Webinar(String topicEng, String descriptionEng, String userId, String imageLink, String language, String targetAudience) {
         this.topicEng = topicEng;
         this.descriptionEng = descriptionEng;
         this.userId = userId;
         this.imageLink = imageLink;
+        this.targetAudience = targetAudience;
+        this.language = language;
     }
 
     public Webinar() {
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getTargetAudience() {
+        return targetAudience;
+    }
+
+    public void setTargetAudience(String targetAudience) {
+        this.targetAudience = targetAudience;
     }
 
     public String getImageLink() {
@@ -100,16 +118,8 @@ public class Webinar {
         return topicEng;
     }
 
-    public String getTopicRus() {
-        return topicRus;
-    }
-
     public String getDescriptionEng() {
         return descriptionEng;
-    }
-
-    public String getDescriptionRus() {
-        return descriptionRus;
     }
 
     public Date getStartDate() {
@@ -136,14 +146,4 @@ public class Webinar {
         this.gotoLink = gotoLink;
     }
 
-    @Override
-    public String toString() {
-        return "Webinar{" +
-                "id='" + id + '\'' +
-                ", topicEng='" + topicEng + '\'' +
-                ", topicRus='" + topicRus + '\'' +
-                ", descriptionEng='" + descriptionEng + '\'' +
-                ", descriptionRus='" + descriptionRus + '\'' +
-                '}';
-    }
 }
