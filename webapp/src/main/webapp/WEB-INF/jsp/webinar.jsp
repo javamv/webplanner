@@ -86,8 +86,8 @@
 			<section>
 				<h3 class="major">GotoWebinar Links</h3>
 				<ul class="actions">
-					<li><a href="${gotoManageLink}" class="button">Manage</a></li>
-					<li><a href="${gotoLink}" class="button">Register</a></li>
+					<li><a href="${gotoManageLink}" class="button" target="_tab">Manage</a></li>
+					<li><a href="${gotoLink}" class="button" target="_tab">Register</a></li>
 				</ul>
 			</section>
 			<section>
