@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>main</artifactId>
-        <groupId>autowebinar</groupId>
+        <groupId>webplanner</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -12,13 +12,13 @@
     <artifactId>webapp</artifactId>
 
     <version>1.0-SNAPSHOT</version>
-    <name>Autowebinar Webapp</name>
+    <name>Webplanner Webapp</name>
     <packaging>war</packaging>
     <url>http://maven.apache.org</url>
 
     <dependencies>
         <dependency>
-            <groupId>autowebinar</groupId>
+            <groupId>webplanner</groupId>
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -51,7 +51,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>autowebinar</finalName>
+        <finalName>webplanner</finalName>
     </build>
 
 </project>
