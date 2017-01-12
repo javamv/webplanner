@@ -59,15 +59,15 @@
 			<h2 class="major">${topic}</h2>
 			<form method="post" action="createGotoWebinar">
 				<div class="field">
-					<label for="date">Date</label>
+					<label for="date">Date (dd-mm-yyyy)</label>
 					<input type="text" name="date" id="date" />
 				</div>
 				<div class="field half first">
-					<label for="startTime">Start Time</label>
+					<label for="startTime">Start Time (hh:mm)</label>
 					<input type="text" name="startTime" id="startTime" />
 				</div>
 				<div class="field half">
-					<label for="endTime">End Time</label>
+					<label for="endTime">End Time (hh:mm)</label>
 					<input type="text" name="endTime" id="endTime" />
 				</div>
 				<p hidden>
