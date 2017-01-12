@@ -1,6 +1,7 @@
 package com.autowebinar.core.web;
 
 import com.autowebinar.core.data.Webinar;
+import com.autowebinar.core.data.WebinarLog;
 import com.autowebinar.core.gotowebinar.GotoSession;
 import com.autowebinar.core.utils.ModelUtils;
 import com.citrix.gotowebinar.api.model.CreatedWebinar;
@@ -75,6 +76,8 @@ public class GotoController {
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
 
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 2L));
+
         return "webinar";
     }
 
@@ -93,6 +96,8 @@ public class GotoController {
         mongoOperations.save(webinar);
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
+
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 3L));
 
         return "webinar";
     }

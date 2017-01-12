@@ -2,6 +2,7 @@ package com.autowebinar.core.web;
 
 import com.autowebinar.core.data.User;
 import com.autowebinar.core.data.Webinar;
+import com.autowebinar.core.data.WebinarLog;
 import com.autowebinar.core.utils.ModelUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -25,6 +26,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -104,6 +106,8 @@ public class SendEmailController {
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
 
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 4L));
+
         return "webinar";
     }
 
@@ -145,6 +149,8 @@ public class SendEmailController {
         mongoOperations.save(webinar);
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
+
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 5L));
 
         return "webinar";
     }

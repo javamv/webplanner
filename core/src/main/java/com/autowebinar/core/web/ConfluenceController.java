@@ -2,6 +2,7 @@ package com.autowebinar.core.web;
 
 import com.autowebinar.core.confluence.ConfluenceRestSession;
 import com.autowebinar.core.data.Webinar;
+import com.autowebinar.core.data.WebinarLog;
 import com.autowebinar.core.utils.ModelUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -79,6 +81,8 @@ public class ConfluenceController {
         mongoOperations.save(webinar);
 
         ModelUtils.webinarToModel(model, webinar, mongoOperations);
+
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 1L));
 
         return "webinar";
     }
