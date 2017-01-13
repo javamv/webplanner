@@ -89,13 +89,17 @@ public class ConfluenceController {
         return "webinar";
     }
 
-    @GetMapping("/deleteBlogPost")
-    public String deleteBlogPost(@RequestParam(value = "id") String id, Model model) throws IOException {
+    @PostMapping("/deleteBlogPost")
+    public String deleteBlogPost(@RequestParam(value = "id") String id,
+                                 @RequestParam(value = "username") String username,
+                                 @RequestParam(value = "password") String password,
+                                 Model model) throws IOException {
 
         Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
         Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
 
-        //confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
+        ConfluenceRestSession confluenceRestSession = new ConfluenceRestSession(username, password);
+        confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
 
         webinar.setPosted(false);
         webinar.setBlogPostCode(null);

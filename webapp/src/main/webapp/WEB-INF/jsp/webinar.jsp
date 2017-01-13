@@ -101,7 +101,7 @@
 		<!-- Schedule -->
 		<article id="post">
 			<h2 class="major">${topic}</h2>
-			<form method="post" action="createBlogPost">
+			<form method="post" action="createBlogPost" id="authForm">
 				<div class="field">
 					<label for="startTime">Luxtown Username</label>
 					<input type="text" name="username" id="username" />
@@ -133,7 +133,7 @@
 			<section>
 				<h3 class="major">Delete Blog</h3>
 				<ul class="actions">
-					<li><a href="deleteBlogPost?id=${id}" class="button special">Delete</a></li>
+					<li><a href="#post" class="button special" id="deletePostButton">Delete</a></li>
 				</ul>
 			</section>
 		</article>

@@ -45,8 +45,8 @@ public class ConfluenceRestSession {
     }
 
     public void deleteBlogPost(String blogPostCode) throws IOException {
-        System.out.println(SENTINEL_REST_API_URL+blogPostCode);
-        restTemplate.delete(SENTINEL_REST_API_URL+blogPostCode);
+        HttpEntity<?> request = new HttpEntity<Object>(headers);
+        restTemplate.exchange(SENTINEL_REST_API_URL+blogPostCode, HttpMethod.DELETE, request, String.class);
     }
 
     public static class Space
