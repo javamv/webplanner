@@ -8,7 +8,7 @@
 -->
 <html>
 <head>
-	<title>Dimension by HTML5 UP</title>
+	<title>Promo Planner</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="../assets/css/main.css" />
@@ -40,7 +40,7 @@
 					<li><a href="#scheduled">SCHEDULED</a></li>
 				</c:if>
 				<c:if test="${posted == false}">
-					<li><a href="createBlogPost?id=${id}">CREATE POST</a></li>
+					<li><a href="#post">CREATE POST</a></li>
 				</c:if>
 				<c:if test="${posted == true}">
 					<li><a href="#posted">POSTED</a></li>
@@ -96,6 +96,28 @@
 					<li><a href="cancelGotoWebinar?id=${id}" class="button special">Cancel</a></li>
 				</ul>
 			</section>
+		</article>
+
+		<!-- Schedule -->
+		<article id="post">
+			<h2 class="major">${topic}</h2>
+			<form method="post" action="createBlogPost">
+				<div class="field">
+					<label for="startTime">Luxtown Username</label>
+					<input type="text" name="username" id="username" />
+				</div>
+				<div class="field">
+					<label for="endTime">Luxtown Password</label>
+					<input type="password" name="password" id="password" />
+				</div>
+				<p hidden>
+					<input type="text" name="id" id="id" value="${id}"/>
+				</p>
+				<ul class="actions">
+					<li><input type="submit" value="Submit" class="special" /></li>
+					<li><input type="reset" value="Reset" /></li>
+				</ul>
+			</form>
 		</article>
 
 		<!-- Posted -->

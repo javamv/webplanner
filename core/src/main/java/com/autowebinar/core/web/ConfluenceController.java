@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
@@ -32,9 +33,6 @@ import static com.autowebinar.core.data.ConstantVariables.createGotoLinkLT;
 public class ConfluenceController {
 
     @Autowired
-    ConfluenceRestSession confluenceRestSession;
-
-    @Autowired
     VelocityEngine velocityEngine;
 
     private static String title = "Webinar from Luxoft Agile Practice";
@@ -42,8 +40,11 @@ public class ConfluenceController {
     @Autowired
     private MongoOperations mongoOperations;
 
-    @GetMapping("/createBlogPost")
-    public String createBlogPost(@RequestParam(value = "id") String id, Model model) throws IOException {
+    @PostMapping("/createBlogPost")
+    public String createBlogPost(@RequestParam(value = "id") String id,
+                                 @RequestParam(value = "username") String username,
+                                 @RequestParam(value = "password") String password,
+                                 Model model) throws IOException {
 
         Query searchUserQuery = new Query(Criteria.where("id").is(id));
         Webinar webinar = mongoOperations.findOne(searchUserQuery, Webinar.class);
@@ -74,6 +75,7 @@ public class ConfluenceController {
                 new ConfluenceRestSession.Body(new ConfluenceRestSession.Storage(
                         writer.toString(), "storage")));
 
+        ConfluenceRestSession confluenceRestSession = new ConfluenceRestSession(username, password);
         String blogPostCode = confluenceRestSession.writeBlogPost(blogPost);
 
         webinar.setPosted(true);
@@ -93,7 +95,7 @@ public class ConfluenceController {
         Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
         Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
 
-        confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
+        //confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
 
         webinar.setPosted(false);
         webinar.setBlogPostCode(null);

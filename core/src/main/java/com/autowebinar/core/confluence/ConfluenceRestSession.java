@@ -23,14 +23,15 @@ public class ConfluenceRestSession {
     private ObjectMapper mapper = new ObjectMapper();
     private final HttpHeaders headers;
 
-    public ConfluenceRestSession() throws IOException {
+    public ConfluenceRestSession(String username, String password) throws IOException {
         // Add the Jackson message converter
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         // create request body
-        // set headers
+        // set headersc
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String encodedAuth = Base64.getEncoder().encodeToString(AUTH.getBytes(Charset.forName("US-ASCII")));
+        String authorization = username+":"+password;
+        String encodedAuth = Base64.getEncoder().encodeToString(authorization.getBytes(Charset.forName("US-ASCII")));
         headers.set("Authorization", "Basic " + encodedAuth);
     }
 
@@ -47,7 +48,6 @@ public class ConfluenceRestSession {
         System.out.println(SENTINEL_REST_API_URL+blogPostCode);
         restTemplate.delete(SENTINEL_REST_API_URL+blogPostCode);
     }
-
 
     public static class Space
     {
