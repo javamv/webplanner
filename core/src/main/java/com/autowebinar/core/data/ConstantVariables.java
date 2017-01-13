@@ -14,8 +14,6 @@ public class ConstantVariables {
     public static final String PROMOTE_URL = "https://sentinel2.luxoft.com/sen/wiki/promote-news/sendforapproval.action?pageId=";
     public static final String SENTINEL_REST_API_URL = "https://sentinel2.luxoft.com/sen/wiki/rest/api/content/";
 
-    public static final String AUTH = "vmoskalenko:77Poland%0";
-
     public static String createGotoLinkTC(Webinar webinar) {
         return String.format(ConstantVariables.GOTO_LINK, webinar.getGotoLink(),"?src=tcmail");
     }

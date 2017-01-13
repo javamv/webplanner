@@ -71,7 +71,7 @@ public class ConfluenceController {
         ConfluenceRestSession.BlogPost blogPost = new ConfluenceRestSession.BlogPost(
                 "blogpost",
                 webinar.getTopicEng(),
-                new ConfluenceRestSession.Space("~vmoskalenko"),
+                new ConfluenceRestSession.Space("~"+username),
                 new ConfluenceRestSession.Body(new ConfluenceRestSession.Storage(
                         writer.toString(), "storage")));
 
