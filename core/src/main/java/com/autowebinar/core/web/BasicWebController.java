@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * Created by vmoskalenko on 16.01.2017.
  *
  */
-class BasicWebController  {
+abstract class BasicWebController  {
 
     @Autowired
     VelocityEngine velocityEngine;

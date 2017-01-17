@@ -6,7 +6,8 @@ import com.autowebinar.core.data.WebinarLog;
 import com.autowebinar.core.utils.ModelUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation .Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -33,6 +34,12 @@ public class SendEmailController extends BasicWebController {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${email.luxoft.ptc.list}")
+    private String ptcListRecipient;
+
+    @Value("${email.luxoft.luxtown}")
+    private String luxtownRecipient;
+
 
     @GetMapping("/notifyTC")
     public String notifyTC(@RequestParam(value = "id") String id, Model model) throws MessagingException {
@@ -51,7 +58,7 @@ public class SendEmailController extends BasicWebController {
 
         helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
         helper.setCc(getLuxEmails(sender, webinarCreator));
-        helper.setTo(VMOSKALENKO_LUXOFT_COM);
+        helper.setTo(ptcListRecipient);
         helper.setSubject(EMAIL_SUBJECT);
         prepareEmailForTC(webinar, sender, webinarCreator, helper);
 
@@ -86,7 +93,7 @@ public class SendEmailController extends BasicWebController {
 
         helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
         helper.setCc(user.getLuxMail());
-        helper.setTo(VMOSKALENKO_LUXOFT_COM);
+        helper.setTo(luxtownRecipient);
         helper.setSubject(EMAIL_SUBJECT);
 
         prepareEmailForMarketing(webinar, user, helper);
