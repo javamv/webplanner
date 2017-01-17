@@ -6,12 +6,8 @@ import com.autowebinar.core.data.WebinarLog;
 import com.autowebinar.core.utils.ModelUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -23,12 +19,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 import static com.autowebinar.core.data.ConstantVariables.*;
 
@@ -37,26 +28,57 @@ import static com.autowebinar.core.data.ConstantVariables.*;
  *
  */
 @Controller
-public class SendEmailController {
+public class SendEmailController extends BasicWebController {
 
     @Autowired
-    JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender;
 
-    @Autowired
-    MongoOperations mongoOperations;
-
-
-    @Autowired
-    VelocityEngine velocityEngine;
 
     @GetMapping("/notifyTC")
     public String notifyTC(@RequestParam(value = "id") String id, Model model) throws MessagingException {
 
-        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
+        Webinar webinar = getWebinar(id);
 
-        Query searchUserQuery = new Query(Criteria.where("id").is(webinar.getUserId()));
-        User user  = mongoOperations.findOne(searchUserQuery, User.class);
+        User sender  = getCurrentUser();
+        User webinarCreator = sender;
+
+        if (!webinar.isCurrentUserCreator(sender)) {
+            webinarCreator = getUserById(webinar.getUserId());
+        }
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
+        helper.setCc(getLuxEmails(sender, webinarCreator));
+        helper.setTo(VMOSKALENKO_LUXOFT_COM);
+        helper.setSubject(EMAIL_SUBJECT);
+        prepareEmailForTC(webinar, sender, webinarCreator, helper);
+
+        javaMailSender.send(helper.getMimeMessage());
+
+        webinar.setSentTCNotification(true);
+        mongoOperations.save(webinar);
+
+        ModelUtils.webinarToModel(model, webinar, sender);
+
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 4L));
+
+        return "webinar";
+    }
+
+    private String[] getLuxEmails(User sender, User webinarCreator) {
+        Set<String> emailsSet = new HashSet<String>();
+        emailsSet.add(sender.getLuxMail());
+        emailsSet.add(webinarCreator.getLuxMail());
+        return emailsSet.toArray(new String[emailsSet.size()]);
+    }
+
+    @GetMapping("/notifyLuxmarketing")
+    public String notifyLuxtown(@RequestParam(value = "id") String id, Model model) throws MessagingException, IOException {
+
+        Webinar webinar = getWebinar(id);
+        User user  = getCurrentUser();
 
         MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -67,9 +89,23 @@ public class SendEmailController {
         helper.setTo(VMOSKALENKO_LUXOFT_COM);
         helper.setSubject(EMAIL_SUBJECT);
 
+        prepareEmailForMarketing(webinar, user, helper);
+        javaMailSender.send(helper.getMimeMessage());
+
+        webinar.setSentForApproval(true);
+        mongoOperations.save(webinar);
+
+        ModelUtils.webinarToModel(model, webinar, user);
+
+        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 5L));
+
+        return "webinar";
+    }
+
+    private void prepareEmailForTC(Webinar webinar, User sender, User webinarCreator, MimeMessageHelper helper) throws MessagingException {
         VelocityContext context = new VelocityContext();
         Template body = velocityEngine.getTemplate("velocity/tcbody.ve", "UTF-16");
-        context.put("signature", user.getSignature());
+        context.put("signature", sender.getSignature());
         StringWriter writer = new StringWriter();
         body.merge(context, writer);
         helper.setText(writer.toString(), false);
@@ -91,44 +127,16 @@ public class SendEmailController {
                 startTime, endTime));
         context.put("language", webinar.getLanguage());
         context.put("description", webinar.getDescriptionEng());
-        context.put("instructor", user.getUsername());
+        context.put("instructor", webinarCreator.getUsername());
         context.put("targetAudience", webinar.getTargetAudience());
         context.put("link", gotoUrl);
-        context.put("email", user.getLuxMail());
+        context.put("email", webinarCreator.getLuxMail());
         writer = new StringWriter();
         attachment.merge(context, writer);
         helper.addAttachment("webinar.doc", new ByteArrayResource(writer.toString().getBytes()));
-
-        javaMailSender.send(helper.getMimeMessage());
-
-        webinar.setSentTCNotification(true);
-        mongoOperations.save(webinar);
-
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
-
-        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 4L));
-
-        return "webinar";
     }
 
-    @GetMapping("/notifyLuxmarketing")
-    public String notifyLuxtown(@RequestParam(value = "id") String id, Model model) throws MessagingException, IOException {
-
-        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
-
-        Query searchUserQuery = new Query(Criteria.where("id").is(webinar.getUserId()));
-        User user  = mongoOperations.findOne(searchUserQuery, User.class);
-
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setFrom(LUXOFT_AGILE_GMAIL_COM);
-        helper.setCc(user.getLuxMail());
-        helper.setTo(VMOSKALENKO_LUXOFT_COM);
-        helper.setSubject(EMAIL_SUBJECT);
-
+    private void prepareEmailForMarketing(Webinar webinar, User user, MimeMessageHelper helper) throws MessagingException {
         VelocityContext context = new VelocityContext();
         Template body = velocityEngine.getTemplate("velocity/luxtownbody.ve", "UTF-16");
         context.put("link", String.format(BLOG_VIEW_LINK, webinar.getBlogPostCode()));
@@ -136,23 +144,6 @@ public class SendEmailController {
         StringWriter writer = new StringWriter();
         body.merge(context, writer);
         helper.setText(writer.toString(), false);
-        javaMailSender.send(helper.getMimeMessage());
-
-        String url = PROMOTE_URL + webinar.getBlogPostCode();
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        con.getResponseCode();
-
-        webinar.setSentForApproval(true);
-        mongoOperations.save(webinar);
-
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
-
-        mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 5L));
-
-        return "webinar";
     }
 
 }

@@ -27,6 +27,7 @@
 			$update = $('#updateButton');
 			$deletePost = $('#deletePostButton');
 
+
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
 
@@ -40,13 +41,25 @@
                                 $(table).empty();
                                 $.each(data, function (index, value) {
                                     var date = new Date(value.startDate)
-                                    var TableRow = "<tr>";
+                                    var TableRow = "<tr id='webinarRow"+value.id+"'>";
                                     TableRow += "<td><a href='retrieveWebinar?id="+value.id+"'>"+ value.topicEng + "</a></td>";
                                     TableRow += "<td>" + date + "</td>";
+                                    TableRow += "<td><a href='#update' class='button special deleteWebinar' code='"+value.id+"'>Delete</a></td>";
                                     TableRow += "</tr>";
                                     $(table).append(TableRow);
                                 });
 
+                                var $deleteWebinar = $('.deleteWebinar');
+                                $deleteWebinar.click(function () {
+                                      var webinarId = $(this)[0].getAttribute("code");
+                                      $.get( "removeWebinar?id="+webinarId, function( data ) {
+                                        if (data = "success"){
+                                            var webinarRowName = "#webinarRow"+webinarId;
+                                            var webinarRow = $(webinarRowName)
+                                            $(webinarRow).remove();
+                                        }
+                                      });
+                                 });
                           });
                         });
 

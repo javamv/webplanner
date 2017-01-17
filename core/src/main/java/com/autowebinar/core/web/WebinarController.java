@@ -3,8 +3,6 @@ package com.autowebinar.core.web;
 import com.autowebinar.core.data.User;
 import com.autowebinar.core.data.Webinar;
 import com.autowebinar.core.utils.ModelUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
@@ -15,17 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping()
-public class WebinarController {
-
-    @Autowired
-    MongoOperations mongoOperations;
+public class WebinarController extends BasicWebController {
 
     @GetMapping(value="/main")
-    public String createWebinar(@RequestParam(value = "id") String id, Model model) {
+    public String createWebinar(Model model) {
 
-        Query searchUserQuery = new Query(Criteria.where("id").is(id));
-        User user = mongoOperations.findOne(searchUserQuery, User.class);
-
+        User user = getCurrentUser();
         ModelUtils.userToModel(model, user);
 
         return "main";
@@ -35,30 +28,34 @@ public class WebinarController {
     public String createWebinar(Model model, HttpServletRequest request) {
         String topicEng = request.getParameter("topic_eng");
         String descriptionEng = request.getParameter("description_eng");
-        String userId = request.getParameter("userId");
         String imageLink = request.getParameter("imageLink");
         String targetAudience = request.getParameter("targetAudience");
         String language = request.getParameter("language");
 
-        Webinar webinar = new Webinar(topicEng, descriptionEng, userId, imageLink, language, targetAudience);
+        User user = getCurrentUser();
+
+        Webinar webinar = new Webinar(topicEng, descriptionEng, user.getId(), imageLink, language, targetAudience);
         // save
         mongoOperations.save(webinar);
 
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+        ModelUtils.webinarToModel(model, webinar);
 
         return "webinar";
     }
 
-    @RequestMapping(value="/retrieveWebinar", method = RequestMethod.GET)
-    public String retrieveWebinar(Model model, HttpServletRequest request) {
-        String id = request.getParameter("id");
-
-        Query searchUserQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchUserQuery, Webinar.class);
-
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
-
+    @GetMapping("/retrieveWebinar")
+    public String retrieveWebinar(@RequestParam("id") String id, Model model) {
+        Webinar webinar = getWebinar(id);
+        ModelUtils.webinarToModel(model, webinar);
         return "webinar";
+    }
+
+    @GetMapping("/removeWebinar")
+    @ResponseBody
+    public String removeWebinar(@RequestParam("id") String id, Model model) {
+        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
+        mongoOperations.remove(searchWebinarQuery, Webinar.class);
+        return "success";
     }
 
 }

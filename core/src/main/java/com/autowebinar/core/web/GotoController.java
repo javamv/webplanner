@@ -9,8 +9,6 @@ import com.citrix.gotowebinar.api.model.DateTimeRange;
 import com.citrix.gotowebinar.api.model.WebinarReqCreate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +25,10 @@ import java.util.TimeZone;
 
 /**
  * Created by VMoskalenko on 06.01.2017.
+ *
  */
 @Controller
-public class GotoController {
+public class GotoController extends BasicWebController {
 
     @Autowired
     private GotoSession gotoSession;
@@ -57,8 +56,7 @@ public class GotoController {
         time.setEndTime(endDate);
         times.add(time);
 
-        Query searchUserQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchUserQuery, Webinar.class);
+        Webinar webinar = getWebinar(id);
 
         WebinarReqCreate newGotoWebinar = new WebinarReqCreate();
         newGotoWebinar.setTimes(times);
@@ -74,7 +72,7 @@ public class GotoController {
 
         mongoOperations.save(webinar);
 
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+        ModelUtils.webinarToModel(model, webinar);
 
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 2L));
 
@@ -85,8 +83,7 @@ public class GotoController {
     public String cancelGotoWebinar(@RequestParam(value = "id") String id, Model model)
             throws com.citrix.gotowebinar.api.common.ApiException, ParseException {
 
-        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
+        Webinar webinar = getWebinar(id);
 
         gotoSession.cancelWebinar(new Long(webinar.getGotoLink()));
 
@@ -95,7 +92,7 @@ public class GotoController {
 
         mongoOperations.save(webinar);
 
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+        ModelUtils.webinarToModel(model, webinar);
 
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 3L));
 

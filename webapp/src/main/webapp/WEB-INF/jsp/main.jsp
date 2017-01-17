@@ -9,6 +9,8 @@
 	<title>Promo Planner</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 	<link rel="stylesheet" href="../assets/css/main.css" />
 	<!--[if lte IE 9]><link rel="stylesheet" href="../assets/css/ie9.css" /><![endif]-->
 	<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
@@ -66,20 +68,15 @@
 					<label for="description_eng">Description</label>
 					<textarea name="description_eng" id="description_eng" rows="3"></textarea>
 				</div>
-                <p hidden>
-                    <input type="text" name="userId" id="userId" value="${userId}"/>
-                </p>
+				<p hidden>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</p>
 				<ul class="actions">
 					<li><input type="submit" value="Submit" class="special" /></li>
 					<li><input type="reset" value="Reset" /></li>
 				</ul>
 			</form>
-			<!--								<ul class="icons">
-                                                <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-                                                <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-                                                <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-                                                <li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
-                                            </ul>-->
+
 		</article>
 
 		<!-- Update -->
@@ -94,6 +91,7 @@
 						<tr>
 							<th>Topic</th>
 							<th>Planned Date</th>
+							<th>Delete</th>
 						</tr>
 						</thead>
 						<tbody id="webinarList">
@@ -114,9 +112,9 @@
                     <label for="signature">E-mail signature</label>
                     <textarea name="signature" id="signature" rows="3">${signature}</textarea>
                 </div>
-                <p hidden>
-                    <input type="text" name="userId" id="userId" value="${userId}"/>
-                </p>
+				<p hidden>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</p>
                 <ul class="actions">
                     <li><input type="submit" value="Submit" class="special" /></li>
                     <li><input type="reset" value="Reset" /></li>
@@ -125,12 +123,18 @@
             <div class="g-signin2" data-onsuccess="onSignIn" hidden></div>
             <div>
                 <a onclick="signOut();">Sign out</a>
-            <div>
+            </div>
+			<form method="post" action="logout" id="logoutForm" hidden>
+				<p hidden>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</p>
+			</form>
             <script>
               function signOut() {
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut();
-                window.location.href = "../#";
+
+                $("#logoutForm").submit();
               }
             </script>
         </article>

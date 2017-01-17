@@ -4,7 +4,6 @@ import static com.autowebinar.core.data.ConstantVariables.*;
 
 import com.autowebinar.core.data.User;
 import com.autowebinar.core.data.Webinar;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.ui.Model;
@@ -14,10 +13,7 @@ import org.springframework.ui.Model;
  */
 public class ModelUtils {
 
-    public static void webinarToModel(Model model, Webinar webinar, MongoOperations mongo) {
-
-        Query searchUserQuery = new Query(Criteria.where("id").is(webinar.getUserId()));
-        User user = mongo.findOne(searchUserQuery, User.class);
+    public static void webinarToModel(Model model, Webinar webinar) {
 
         model.addAttribute("topic", webinar.getTopicEng());
         model.addAttribute("description", webinar.getDescriptionEng());
@@ -29,8 +25,12 @@ public class ModelUtils {
         model.addAttribute("gotoManageLink", createManageLink(webinar));
         model.addAttribute("blogLink", luxtownViewLink(webinar));
         model.addAttribute("blogEditLink", luxtownEditLink(webinar));
-        model.addAttribute("userImage", user.getImage());
-        model.addAttribute("userId", user.getId());
+    }
+
+    public static void webinarToModel(Model model, Webinar webinar, User currentUser) {
+        webinarToModel(model, webinar);
+        model.addAttribute("userImage", currentUser.getImage());
+        model.addAttribute("userId", currentUser.getId());
 
     }
 

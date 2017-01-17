@@ -11,6 +11,8 @@
 	<title>Promo Planner</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 	<link rel="stylesheet" href="../assets/css/main.css" />
 	<!--[if lte IE 9]><link rel="stylesheet" href="../assets/css/ie9.css" /><![endif]-->
 	<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
@@ -23,7 +25,7 @@
 	<!-- Header -->
 	<header id="header">
 		<div class="logo">
-			<a href="main?id=${userId}"><span class="icon fa-diamond"></span></a>
+			<a href="main"><span class="icon fa-diamond"></span></a>
 		</div>
 		<div class="content">
 			<div class="inner">
@@ -72,6 +74,7 @@
 				</div>
 				<p hidden>
 					<input type="text" name="id" id="webinarId" value="${id}"/>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</p>
 				<ul class="actions">
 					<li><input type="submit" value="Submit" class="special" /></li>
@@ -112,6 +115,7 @@
 				</div>
 				<p hidden>
 					<input type="text" name="id" id="id" value="${id}"/>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</p>
 				<ul class="actions">
 					<li><input type="submit" value="Submit" class="special" /></li>

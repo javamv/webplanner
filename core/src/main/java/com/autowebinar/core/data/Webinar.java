@@ -146,4 +146,7 @@ public class Webinar {
         this.gotoLink = gotoLink;
     }
 
+    public boolean isCurrentUserCreator(User currentUser) {
+        return userId.equals(currentUser.getId());
+    }
 }

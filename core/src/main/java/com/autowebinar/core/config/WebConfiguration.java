@@ -17,7 +17,8 @@ import java.util.Properties;
  */
 @Configuration
 @ComponentScan(basePackages = {
-        "com.autowebinar.core.web"
+        "com.autowebinar.core.web",
+
 })
 @EnableWebMvc
 public class WebConfiguration {

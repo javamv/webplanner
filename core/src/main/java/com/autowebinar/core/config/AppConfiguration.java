@@ -13,7 +13,8 @@ import org.springframework.context.annotation.PropertySource;
         "com.autowebinar.core.data",
         "com.autowebinar.core.confluence",
         "com.autowebinar.core.email",
-        "com.autowebinar.core.gotowebinar"
+        "com.autowebinar.core.gotowebinar",
+        "com.autowebinar.core.security"
 })
 @PropertySource("classpath:application.properties")
 public class AppConfiguration {

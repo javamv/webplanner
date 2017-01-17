@@ -9,11 +9,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,14 +25,13 @@ import static com.autowebinar.core.data.ConstantVariables.createGotoLinkLT;
 
 /**
  * Created by VMoskalenko on 06.01.2017.
+ *
  */
 @Controller
-public class ConfluenceController {
+public class ConfluenceController extends BasicWebController {
 
     @Autowired
     VelocityEngine velocityEngine;
-
-    private static String title = "Webinar from Luxoft Agile Practice";
 
     @Autowired
     private MongoOperations mongoOperations;
@@ -46,8 +42,7 @@ public class ConfluenceController {
                                  @RequestParam(value = "password") String password,
                                  Model model) throws IOException {
 
-        Query searchUserQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchUserQuery, Webinar.class);
+        Webinar webinar = getWebinar(id);
 
         Calendar startTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
         startTime.setTime(webinar.getStartDate());
@@ -82,7 +77,7 @@ public class ConfluenceController {
         webinar.setBlogPostCode(blogPostCode);
         mongoOperations.save(webinar);
 
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+        ModelUtils.webinarToModel(model, webinar);
 
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 1L));
 
@@ -95,8 +90,7 @@ public class ConfluenceController {
                                  @RequestParam(value = "password") String password,
                                  Model model) throws IOException {
 
-        Query searchWebinarQuery = new Query(Criteria.where("id").is(id));
-        Webinar webinar = mongoOperations.findOne(searchWebinarQuery, Webinar.class);
+        Webinar webinar = getWebinar(id);
 
         ConfluenceRestSession confluenceRestSession = new ConfluenceRestSession(username, password);
         confluenceRestSession.deleteBlogPost(webinar.getBlogPostCode());
@@ -105,7 +99,7 @@ public class ConfluenceController {
         webinar.setBlogPostCode(null);
         mongoOperations.save(webinar);
 
-        ModelUtils.webinarToModel(model, webinar, mongoOperations);
+        ModelUtils.webinarToModel(model, webinar);
 
         return "webinar";
     }
