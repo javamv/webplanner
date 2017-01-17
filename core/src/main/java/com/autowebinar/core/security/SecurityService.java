@@ -14,9 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by vmoskalenko on 16.01.2017.
@@ -49,8 +47,7 @@ public class SecurityService implements UserDetailsService {
 
     private GoogleIdToken.Payload getPayload(String authCode) {
         String CLIENT_SECRET_FILE = "client_secret.json";
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(CLIENT_SECRET_FILE).getFile());
+        InputStream fileStream = getClass().getClassLoader().getResourceAsStream(CLIENT_SECRET_FILE);
 
         GoogleClientSecrets clientSecrets;
         GoogleTokenResponse tokenResponse;
@@ -58,7 +55,7 @@ public class SecurityService implements UserDetailsService {
 
         try {
             clientSecrets = GoogleClientSecrets.load(
-                    JacksonFactory.getDefaultInstance(), new FileReader(file));
+                    JacksonFactory.getDefaultInstance(), new InputStreamReader(fileStream));
             tokenResponse = new GoogleAuthorizationCodeTokenRequest(
                     new NetHttpTransport(),
                     JacksonFactory.getDefaultInstance(),
