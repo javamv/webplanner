@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -42,6 +43,7 @@ public class SendEmailController extends BasicWebController {
 
 
     @GetMapping("/notifyTC")
+    @ResponseBody
     public String notifyTC(@RequestParam(value = "id") String id, Model model) throws MessagingException {
 
         Webinar webinar = getWebinar(id);
@@ -71,7 +73,7 @@ public class SendEmailController extends BasicWebController {
 
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 4L));
 
-        return "webinar";
+        return "Email to PTC has been sent";
     }
 
     private String[] getLuxEmails(User sender, User webinarCreator) {
@@ -82,6 +84,7 @@ public class SendEmailController extends BasicWebController {
     }
 
     @GetMapping("/notifyLuxmarketing")
+    @ResponseBody
     public String notifyLuxtown(@RequestParam(value = "id") String id, Model model) throws MessagingException, IOException {
 
         Webinar webinar = getWebinar(id);
@@ -106,7 +109,7 @@ public class SendEmailController extends BasicWebController {
 
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 5L));
 
-        return "webinar";
+        return "Email to marketing has been sent";
     }
 
     private void prepareEmailForTC(Webinar webinar, User sender, User webinarCreator, MimeMessageHelper helper) throws MessagingException {

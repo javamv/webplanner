@@ -47,8 +47,7 @@
 				<c:if test="${posted == true}">
 					<li><a href="#posted">POSTED</a></li>
 				</c:if>
-				<li><a href="notifyLuxmarketing?id=${id}">MARKETING</a></li>
-				<li><a href="notifyTC?id=${id}">TC MAIL LIST</a></li>
+				<li><a href="#promote">PROMOTE</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -140,6 +139,35 @@
 					<li><a href="#post" class="button special" id="deletePostButton">Delete</a></li>
 				</ul>
 			</section>
+		</article>
+
+		<!-- Posted -->
+		<article id="promote">
+			<h2 class="major">Promo Manager</h2>
+			<section>
+				<h3 class="major">Promo Activities</h3>
+				<ul class="actions">
+					<li><a onclick="notifyLuxmarketing('${id}')" class="button">MARKETING</a></li>
+					<li><a onclick="notifyTC('${id}')" class="button">TC MAIL LIST</a></li>
+				</ul>
+				<h4 class="major" id="promoStatus"></h4>
+			</section>
+			<script>
+              function notifyLuxmarketing(webinarId) {
+                $.get("notifyLuxmarketing?id="+webinarId, function( data ) {
+						if (data != null){
+							$("#promoStatus").text(data);
+						}
+                 });
+              }
+              function notifyTC(webinarId) {
+                $.get("notifyTC?id="+webinarId, function( data ) {
+						if (data != null){
+							$("#promoStatus").text(data);
+						}
+                 });
+              }
+            </script>
 		</article>
 
 	</div>
