@@ -60,7 +60,7 @@ public class GotoController extends BasicWebController {
 
         WebinarReqCreate newGotoWebinar = new WebinarReqCreate();
         newGotoWebinar.setTimes(times);
-        newGotoWebinar.setDescription(webinar.getDescriptionEng());
+        newGotoWebinar.setDescription(plainText(webinar.getDescriptionEng()));
         newGotoWebinar.setSubject(webinar.getTopicEng());
 
         CreatedWebinar createdGotoWebinar = gotoSession.createWebinar(newGotoWebinar);
@@ -77,6 +77,10 @@ public class GotoController extends BasicWebController {
         mongoOperations.save(new WebinarLog(webinar.getId(), new Date(), 2L));
 
         return "webinar";
+    }
+
+    private String plainText(String descriptionEng) {
+        return descriptionEng.replaceAll("<[^>]*>", "");
     }
 
     @GetMapping("/cancelGotoWebinar")
